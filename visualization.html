@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lagrange Optimization Visualization</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .chart-container { position: relative; height: 400px; width: 400px; margin: auto; }
+    </style>
+</head>
+<body>
+
+<h2>Visualization for f(x, y) = x^2 + y^2 subject to x + y = 1</h2>
+<div class="chart-container">
+    <canvas id="optimizationChart"></canvas>
+</div>
+
+<script>
+    const ctx = document.getElementById("optimizationChart").getContext("2d");
+
+    // Data for the constraint line x + y = 1 (or y = 1 - x)
+    const constraintLineData = [];
+    for (let x = -2; x <= 3; x += 0.5) {
+        constraintLineData.push({ x: x, y: 1 - x });
+    }
+
+    // Critical point found by Lagrange solver
+    const criticalPoint = { x: 0.5, y: 0.5 }; // From solver output
+
+    const chart = new Chart(ctx, {
+        type: "scatter",
+        data: {
+            datasets: [
+                {
+                    label: "Constraint Line (x + y = 1)",
+                    data: constraintLineData,
+                    borderColor: "blue",
+                    borderWidth: 1,
+                    pointRadius: 0,
+                    showLine: true,
+                    fill: false,
+                    tension: 0 // Ensure straight lines for linear constraint
+                },
+                {
+                    label: "Critical Point (0.5, 0.5)",
+                    data: [criticalPoint],
+                    backgroundColor: "red",
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            scales: {
+                x: {
+                    type: "linear",
+                    position: "bottom",
+                    title: {
+                        display: true,
+                        text: "x"
+                    },
+                    min: -2,
+                    max: 3
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: "y"
+                    },
+                    min: -2,
+                    max: 3
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: "Lagrange Multiplier Critical Point"
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || 		;
+                            if (label) {
+                                label += 	: 	;
+                            }
+                            if (context.parsed.x !== null) {
+                                label += `(${context.parsed.x}, ${context.parsed.y})`;
+                            }
+                            // Add f value for the critical point
+                            if (context.dataset.label === "Critical Point (0.5, 0.5)") {
+                                label += ` - f(x,y) = ${criticalPoint.x**2 + criticalPoint.y**2}`;
+                            }
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
+
